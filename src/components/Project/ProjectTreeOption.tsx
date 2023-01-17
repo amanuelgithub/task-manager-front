@@ -3,7 +3,6 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AddIcon from "@mui/icons-material/Add";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ListItemText from "@mui/material/ListItemText";
-import axios from "../service/axios";
 import Menu from "@mui/material/Menu";
 import {
   Fade,
@@ -12,6 +11,7 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
+import axios from "../../service/axios";
 
 function ProjectTreeOption({
   handleOpenCreateTaskModal,

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import CTextField from "./CTextField";
-import CreateButton from "./ui/CreateButton";
-import Title from "./ui/Title";
+import axios from "../../service/axios";
+import Title from "../ui/Title";
 import Divider from "@mui/material/Divider";
-import axios from "../service/axios";
+import CTextField from "../ui/CTextField";
+import CreateButton from "../ui/CreateButton";
 
 const style = {
   position: "absolute" as "absolute",

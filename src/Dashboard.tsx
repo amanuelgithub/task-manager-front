@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import CreateProject from "./components/CreateProject";
-import CreateTask from "./components/CreateTask";
-import ProjectTree from "./components/ProjectTree";
+import CreateProject from "./components/Project/CreateProject";
+import CreateTask from "./components/Task/CreateTask";
+import TaskActivities from "./components/Activities/TaskActivities";
 import axios from "./service/axios";
+import ProjectTree from "./components/Project/ProjectTree";
 
 function Dashboard() {
   const [projectMutated, setProjectMutated] = useState(false);
@@ -10,6 +11,11 @@ function Dashboard() {
   const [projects, setProjects] = useState([]);
 
   const [selectedProjectId, setSelectedProjectId] = useState("");
+  const [selectedTaskId, setSelectedTaskId] = useState("");
+
+  const [taskIdChanged, setTaskIdChanged] = useState(false);
+
+  let taskActivityComponent: any;
 
   const getProjects = async () => {
     axios.get("/project").then((result) => {
@@ -29,6 +35,12 @@ function Dashboard() {
     };
   }, [projectMutated, taskMutated]);
 
+  // useEffect(() => {
+  // taskActivityComponent = (
+  //   <TaskActivities key={selectedTaskId} taskId={selectedTaskId} />
+  // );
+  // }, [selectedTaskId]);
+
   // project created, deleted, updated
   const handleProjectMutated = () => {
     setProjectMutated(true);
@@ -40,6 +52,13 @@ function Dashboard() {
 
   const changeSelectedProjectId = (projectId: string) => {
     setSelectedProjectId(projectId);
+  };
+
+  const changeSelectedTaskId = (taskId: string) => {
+    console.log("Selected task id: " + taskId);
+    setSelectedTaskId(taskId);
+
+    setTaskIdChanged(!taskIdChanged);
   };
 
   return (
@@ -59,13 +78,16 @@ function Dashboard() {
                 projectsWithTask={projects}
                 selectedProjectId={selectedProjectId}
                 changeSelectedProjectId={changeSelectedProjectId}
+                changeSelectedTaskId={changeSelectedTaskId}
                 handleIsTaskMutated={handleTaskMutated}
                 handleIsProjectMutated={handleProjectMutated}
               />
             </div>
             {/* right */}
             <div className="p-4 w-3/4">
-              {selectedProjectId !== "" ? (
+              {selectedTaskId && <TaskActivities taskId={selectedTaskId} />}
+
+              {/* {selectedProjectId !== "" ? (
                 <CreateTask
                   selectedProjectId={selectedProjectId}
                   handleIsTaskCreated={handleTaskMutated}
@@ -74,7 +96,7 @@ function Dashboard() {
                 <div className="flex justify-center h-screen items-center">
                   Start by selecting a project to create a Task.
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </>

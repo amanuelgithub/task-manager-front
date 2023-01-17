@@ -9,23 +9,25 @@ import AddIcon from "@mui/icons-material/Add";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import IconButton from "@mui/material/IconButton";
-import CreateTaskModal from "./CreateTaskModal";
 import Divider from "@mui/material/Divider";
-import axios from "../service/axios";
 import ProjectTreeOption from "./ProjectTreeOption";
 import Button from "@mui/material/Button";
 import CreateProjectModal from "./CreateProjectModal";
+import axios from "../../service/axios";
+import CreateTaskModal from "../Task/CreateTaskModal";
 
 function ProjectTree({
   handleIsProjectMutated,
   handleIsTaskMutated,
   selectedProjectId,
   changeSelectedProjectId,
+  changeSelectedTaskId,
   projectsWithTask,
 }: {
   projectsWithTask: any[];
   selectedProjectId: string;
   changeSelectedProjectId: (projectId: string) => void;
+  changeSelectedTaskId: (taskId: string) => void;
   handleIsProjectMutated: () => void;
   handleIsTaskMutated: () => void;
 }) {
@@ -130,7 +132,10 @@ function ProjectTree({
                       key={task?.id}
                       className="flex justify-center items-center"
                     >
-                      <ListItemButton sx={{ pl: 4 }}>
+                      <ListItemButton
+                        sx={{ pl: 4 }}
+                        onClick={() => changeSelectedTaskId(task.id)}
+                      >
                         <ListItemIcon>
                           <AssignmentIcon />
                         </ListItemIcon>

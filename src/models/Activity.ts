@@ -1,4 +1,6 @@
 export interface IActivity {
+  id?: string;
+  taskId: string;
   description: string;
   status: ActivityStatusEnum;
 }
