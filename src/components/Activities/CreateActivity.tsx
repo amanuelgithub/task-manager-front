@@ -59,7 +59,7 @@ function CreateActivity({
       onBlur={handleCreateActivity}
       onChange={(ev: any) => setActivityText(ev.target.value)}
       placeholder="Untitled"
-      className="w-[186px] overflow-x-hidden border-2 border-gray-200 px-2 py-1 rounded-md outline-none my-1"
+      className="w-full overflow-x-hidden border-2 border-gray-200 px-2 py-1 rounded-md outline-none my-1"
     />
   );
 }

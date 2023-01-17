@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { ActivityStatusEnum } from "../../models/Activity";
-import axios from "../../service/axios";
+import { ActivityStatusEnum, IActivity } from "../../models/Activity";
 import CreateActivity from "./CreateActivity";
 import ActivityCard from "./ActivityCard";
 import AddIcon from "@mui/icons-material/Add";
+import axios from "../../service/axios";
 
 const NewButton = ({
   children,
@@ -51,12 +51,22 @@ function TaskActivities({ taskId }: { taskId: string }) {
     }
   };
 
+  const updateActivity = (activity: IActivity) => {
+    try {
+      axios
+        .patch(`/activity/${activity.id}`, { status: activity.status })
+        .then((result) => {
+          handleActivityMutated();
+
+          console.log("Task Updated: ", result.data);
+        });
+    } catch (err: any) {
+      console.log("Error: ", err);
+    }
+  };
+
   useEffect(() => {
     getActivities(taskId);
-
-    return () => {
-      setIsActivityMutated(false);
-    };
   }, [taskId, isActivityMutated]);
 
   useEffect(() => {
@@ -95,14 +105,35 @@ function TaskActivities({ taskId }: { taskId: string }) {
     setIsActivityMutated((prev) => !prev);
   };
 
+  const onDragOver = (ev: any) => {
+    ev.preventDefault();
+  };
+  const onDrop = (ev: any, activityStatus: ActivityStatusEnum) => {
+    let activityId = ev.dataTransfer.getData("activityId");
+
+    let activity = allActvities.filter(
+      (activity) => activity.id === activityId
+    )[0];
+
+    activity.status = activityStatus;
+
+    console.log("Activity Dropped: ", activity);
+    updateActivity(activity);
+  };
+
   return (
     <>
       {allActvities && (
         <div className="flex justify-center">
           <div className="flex justify-evenly gap-1 w-full">
+            {/* todo section */}
             <div className="w-1/3 p-2">
               <h3 className="pb-6">To Do</h3>
-              <div>
+              <div
+                className="pb-10"
+                onDragOver={(ev: any) => onDragOver(ev)}
+                onDrop={(ev: any) => onDrop(ev, ActivityStatusEnum.NOT_STARTED)}
+              >
                 {/* listing all todo activitie */}
                 {todoActivities &&
                   todoActivities.map((activity) => (
@@ -131,9 +162,15 @@ function TaskActivities({ taskId }: { taskId: string }) {
                 </NewButton>
               </div>
             </div>
+
+            {/* inprogress section */}
             <div className="w-1/3 p-2">
               <h3 className="pb-6">Inprogress</h3>
-              <div>
+              <div
+                className="pb-10"
+                onDragOver={(ev: any) => onDragOver(ev)}
+                onDrop={(ev: any) => onDrop(ev, ActivityStatusEnum.INPROGRESS)}
+              >
                 {/* listing all inprogress activitie */}
                 {inprogressActivities &&
                   inprogressActivities.map((activity) => (
@@ -162,9 +199,15 @@ function TaskActivities({ taskId }: { taskId: string }) {
                 </NewButton>
               </div>
             </div>
+
+            {/* completed section */}
             <div className="w-1/3 p-2">
               <h3 className="pb-6">Completed</h3>
-              <div>
+              <div
+                className="pb-10"
+                onDragOver={(ev: any) => onDragOver(ev)}
+                onDrop={(ev: any) => onDrop(ev, ActivityStatusEnum.COMPLETED)}
+              >
                 {/* listing all completed activitie */}
                 {completedActivities &&
                   completedActivities.map((activity) => (

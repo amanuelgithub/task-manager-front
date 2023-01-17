@@ -24,7 +24,7 @@ function ActivityCard({
 
   const [isInputFocused, setIsInputFocused] = useState(true);
 
-  const inputRef = useRef<any>(null);
+  const inputRef = useRef<HTMLInputElement | any>();
 
   const handleFocusedBlurred = () => {
     setIsInputFocused((prev) => !prev);
@@ -48,10 +48,10 @@ function ActivityCard({
       inputRef.current.value = "";
 
       setIsDisabled(true);
-
       handleIsActivityMutated();
 
       console.log("Activity Updated Reponse: ", response);
+      // console.log(inputRef.current);
     } catch (err: any) {
       console.log("Error: ", err);
     }
@@ -67,7 +67,6 @@ function ActivityCard({
       inputRef.current.value = "";
 
       setIsDisabled(true);
-
       handleIsActivityMutated();
 
       console.log("Activity Delete Reponse: ", response);
@@ -76,36 +75,44 @@ function ActivityCard({
     }
   };
 
+  const onDragStart = (ev: any, activity: IActivity) => {
+    console.log("drag start: ", activity.id);
+    ev.dataTransfer.setData("activityId", activity.id);
+  };
+
   return (
     <>
       {activity && (
         <div
+          draggable
+          onDragStart={(ev: any) => onDragStart(ev, activity)}
           className="w-full relative"
           onMouseEnter={() => {
             handleMouseEnterLeave();
-            console.log("Mouse Entered:", isInputMouseEntered);
+            // console.log("Mouse Entered:", isInputMouseEntered);
           }}
           onMouseLeave={() => {
             handleMouseEnterLeave();
-            console.log("Mouse Leave:", isInputMouseEntered);
+            // console.log("Mouse Leave:", isInputMouseEntered);
           }}
         >
           <input
+            key={activity.id}
             type="text"
             value={description}
             disabled={isDisabled}
             ref={inputRef}
             onFocus={() => {
               handleFocusedBlurred();
-              console.log("Focused", isInputFocused);
+              // console.log("Focused", isInputFocused);
             }}
             onBlur={handleUpdateActivity}
             onChange={(ev: any) => {
               setDescription(ev.target.value);
-              console.log("update description: ", description);
+              // console.log("update description: ", description);
             }}
             placeholder="Untitled"
-            className="w-[186px] overflow-x-hidden border-2 border-gray-200 px-2 py-1 rounded-md outline-none my-1 text-gray-600"
+            className="w-full overflow-x-hidden border-2 border-gray-200 px-2 py-1 rounded-md outline-none my-1 text-gray-600"
           />
 
           {isInputMouseEntered || isInputFocused ? (
@@ -115,6 +122,7 @@ function ActivityCard({
                   sx={{ width: 32, height: 32 }}
                   onClick={() => {
                     setIsDisabled(false);
+                    inputRef.current.focus();
                   }}
                 >
                   <EditIcon
